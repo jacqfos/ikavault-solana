@@ -78,41 +78,6 @@ ikavault-dist/dist/ # Built extension (source for ikavault-extension.zip)
 tests/              # Anchor integration tests
 ```
 
-## Dev setup
-
-### Prerequisites
-- Rust (edition 2024)
-- Solana CLI 3.x+
-- Anchor CLI 1.x
-- Node 20+
-
-### Build the Anchor program
-```bash
-anchor build
-```
-
-### Build the extension
-```bash
-cd extension
-npm install
-npm run build   # output lands in ikavault-dist/dist/
-```
-
-### Run the website locally
-```bash
-cd website
-npm install
-npm run dev     # http://localhost:3100
-```
-
-### Deploy the website (Walrus Sites)
-```bash
-cd website
-rm -rf out .next && npm run build
-site-builder publish ./out --epochs 30
-```
-Then register a SuiNS name at [suins.io](https://suins.io) and set target address to the printed `0x<site-object-id>`.
-
 ## Environment
 
 | Resource       | Endpoint                                          |
