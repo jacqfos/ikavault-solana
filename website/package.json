@@ -1,0 +1,44 @@
+{
+  "name": "ikavault-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mysten/dapp-kit": "^0.14.0",
+    "@mysten/sui": "1.24.0",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.95.4",
+    "@tanstack/react-query": "^5.56.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.7",
+    "lucide-react": "^0.451.0",
+    "next": "14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/react": "18.2.79",
+    "@types/react-dom": "18.2.25",
+    "autoprefixer": "^10.4.20",
+    "pino-pretty": "^11.2.2",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.3"
+  },
+  "overrides": {
+    "@types/react": "18.2.79",
+    "@types/react-dom": "18.2.25",
+    "@mysten/sui": "1.24.0"
+  }
+}

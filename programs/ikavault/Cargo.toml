@@ -1,0 +1,26 @@
+[package]
+name = "ikavault"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "ikavault"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = "0.31"
+
+# Ika dWallet Anchor integration (pre-alpha, mock signer)
+# ika-dwallet-anchor = { git = "https://github.com/dwallet-labs/ika-pre-alpha" }
+
+# Encrypt FHE — store encrypted URL hash ciphertext on-chain
+# (actual FHE computation runs on the Encrypt network via gRPC, not in the Anchor program)
+encrypt-types = { git = "https://github.com/dwallet-labs/encrypt-pre-alpha" }

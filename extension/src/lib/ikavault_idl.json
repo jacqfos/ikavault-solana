@@ -1,0 +1,864 @@
+{
+  "address": "4y4f3BWjnCwAMw7eumBhLveJ6Uvv5i2qdgLCH3Nem6kf",
+  "metadata": {
+    "name": "ikavault",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "add_entry",
+      "docs": [
+        "Store a new credential entry (pointer to Walrus-encrypted blob).",
+        "`encrypted_url_hash`: Encrypt FHE ciphertext of SHA-256(normalize(url)).",
+        "Pass an empty Vec if the client doesn't support Encrypt yet (graceful degradation)."
+      ],
+      "discriminator": [
+        170,
+        45,
+        66,
+        212,
+        251,
+        230,
+        45,
+        38
+      ],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "user_profile.entry_count",
+                "account": "UserProfile"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "user_profile"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "label",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "name": "encrypted_blob_id",
+          "type": "string"
+        },
+        {
+          "name": "encrypted_url_hash",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "delete_entry",
+      "docs": [
+        "Soft-delete a credential entry."
+      ],
+      "discriminator": [
+        227,
+        198,
+        83,
+        191,
+        70,
+        23,
+        194,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "user_profile",
+            "vault_entry"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "entry_index",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "init_vault",
+      "docs": [
+        "Initialize a new vault for a user.",
+        "Must be called once after Web3Auth login + dWallet creation."
+      ],
+      "discriminator": [
+        77,
+        79,
+        85,
+        150,
+        33,
+        217,
+        52,
+        106
+      ],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "dwallet_id",
+          "type": "string"
+        },
+        {
+          "name": "initial_blob_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "share_entry",
+      "docs": [
+        "Share a credential with another user (stretch goal).",
+        "Caller must pre-compute recipient-encrypted blob off-chain."
+      ],
+      "discriminator": [
+        86,
+        158,
+        151,
+        228,
+        143,
+        91,
+        246,
+        20
+      ],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_entry",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "shared_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  104,
+                  97,
+                  114,
+                  101,
+                  100,
+                  95,
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "recipient"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "recipient"
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "user_profile",
+            "vault_entry"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "entry_index",
+          "type": "u32"
+        },
+        {
+          "name": "recipient_encrypted_blob_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_entry",
+      "docs": [
+        "Update an existing credential entry.",
+        "Pass None for fields that should not change."
+      ],
+      "discriminator": [
+        70,
+        47,
+        181,
+        2,
+        1,
+        40,
+        2,
+        92
+      ],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  112,
+                  114,
+                  111,
+                  102,
+                  105,
+                  108,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "user_profile",
+            "vault_entry"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "entry_index",
+          "type": "u32"
+        },
+        {
+          "name": "label",
+          "type": {
+            "option": "string"
+          }
+        },
+        {
+          "name": "url",
+          "type": {
+            "option": "string"
+          }
+        },
+        {
+          "name": "username",
+          "type": {
+            "option": "string"
+          }
+        },
+        {
+          "name": "encrypted_blob_id",
+          "type": {
+            "option": "string"
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "SharedVaultEntry",
+      "discriminator": [
+        103,
+        93,
+        118,
+        43,
+        5,
+        185,
+        210,
+        233
+      ]
+    },
+    {
+      "name": "UserProfile",
+      "discriminator": [
+        32,
+        37,
+        119,
+        205,
+        179,
+        180,
+        13,
+        194
+      ]
+    },
+    {
+      "name": "VaultEntry",
+      "discriminator": [
+        247,
+        13,
+        244,
+        166,
+        187,
+        153,
+        172,
+        22
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "BlobIdTooLong",
+      "msg": "Vault blob ID exceeds maximum length"
+    },
+    {
+      "code": 6001,
+      "name": "UrlTooLong",
+      "msg": "URL exceeds maximum length"
+    },
+    {
+      "code": 6002,
+      "name": "UsernameTooLong",
+      "msg": "Username exceeds maximum length"
+    },
+    {
+      "code": 6003,
+      "name": "LabelTooLong",
+      "msg": "Label exceeds maximum length"
+    },
+    {
+      "code": 6004,
+      "name": "EntryNotFound",
+      "msg": "Vault entry not found"
+    },
+    {
+      "code": 6005,
+      "name": "VaultFull",
+      "msg": "Vault is at maximum capacity"
+    },
+    {
+      "code": 6006,
+      "name": "Unauthorized",
+      "msg": "Unauthorized: signer does not own this vault"
+    },
+    {
+      "code": 6007,
+      "name": "DwalletIdTooLong",
+      "msg": "dWallet ID exceeds maximum length"
+    },
+    {
+      "code": 6008,
+      "name": "AlreadyShared",
+      "msg": "Shared vault: recipient already has access"
+    },
+    {
+      "code": 6009,
+      "name": "EncryptedHashTooLong",
+      "msg": "Encrypt FHE ciphertext exceeds maximum length"
+    }
+  ],
+  "types": [
+    {
+      "name": "SharedVaultEntry",
+      "docs": [
+        "PDA seeds: [\"shared_entry\", owner.key(), recipient.key(), entry_index as u32 LE bytes]",
+        "Created when owner shares a credential with a recipient.",
+        "Contains a *separate* Walrus blob encrypted for the recipient's dWallet key."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "Original credential owner"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "recipient",
+            "docs": [
+              "Recipient who can read this shared credential"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "origin_index",
+            "docs": [
+              "Index of the original VaultEntry"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "label",
+            "docs": [
+              "Human-readable label (copied from original for recipient UX)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "docs": [
+              "URL (copied from original)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "docs": [
+              "Username (copied from original)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "encrypted_blob_id",
+            "docs": [
+              "Walrus blob ID encrypted specifically for the recipient's dWallet key"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "shared_at",
+            "docs": [
+              "Unix timestamp of sharing"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump for PDA derivation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserProfile",
+      "docs": [
+        "PDA seeds: [\"user_profile\", owner.key()]",
+        "One per user — holds their dWallet ID and overall vault metadata."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "The wallet that owns this profile (used in PDA seed)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "dwallet_id",
+            "docs": [
+              "Ika dWallet ID for this user (mock in pre-alpha)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "vault_blob_id",
+            "docs": [
+              "Walrus blob ID of the latest encrypted vault snapshot"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "entry_count",
+            "docs": [
+              "Number of active vault entries"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "updated_at",
+            "docs": [
+              "Unix timestamp of last update"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump for PDA derivation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultEntry",
+      "docs": [
+        "PDA seeds: [\"vault_entry\", owner.key(), entry_index as u32 LE bytes]",
+        "One per stored credential. Holds a pointer to the Walrus encrypted blob."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "Owner's wallet pubkey"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "index",
+            "docs": [
+              "Sequential index (matches PDA seed)"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "label",
+            "docs": [
+              "Human-readable label for the credential"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "docs": [
+              "URL/domain the credential belongs to (plaintext, for display)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "encrypted_url_hash",
+            "docs": [
+              "Encrypt FHE ciphertext of SHA-256(normalize(url)).",
+              "Stored by the Encrypt network for private URL matching during autofill.",
+              "Empty if the client didn't provide an Encrypt ciphertext (graceful degradation)."
+            ],
+            "type": "bytes"
+          },
+          {
+            "name": "username",
+            "docs": [
+              "Plaintext username/email (not sensitive — password is in blob)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "encrypted_blob_id",
+            "docs": [
+              "Walrus blob ID of the encrypted credential payload"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "is_active",
+            "docs": [
+              "Whether this entry is active (soft-delete pattern)"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Unix timestamp of creation"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
+            "docs": [
+              "Unix timestamp of last update"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump for PDA derivation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

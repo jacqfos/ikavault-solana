@@ -1,0 +1,18 @@
+[package]
+name = "ikavault-encrypt-search"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "ikavault_encrypt_search"
+
+[features]
+no-entrypoint = []
+default = []
+
+[dependencies]
+# The #[encrypt_fn] macro generates `encrypt_dsl::cpi` in its expansion.
+# Aliasing encrypt-solana-dsl as `encrypt_dsl` makes that reference resolve correctly.
+encrypt_dsl   = { package = "encrypt-solana-dsl", git = "https://github.com/dwallet-labs/encrypt-pre-alpha" }
+encrypt-types = { git = "https://github.com/dwallet-labs/encrypt-pre-alpha" }

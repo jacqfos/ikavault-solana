@@ -1,0 +1,38 @@
+{
+  "name": "ikavault-extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node node_modules/vite/bin/vite.js build --watch",
+    "build": "node node_modules/vite/bin/vite.js build",
+    "preview": "node node_modules/vite/bin/vite.js preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@encrypt.xyz/pre-alpha-solana-client": "latest",
+    "@solana/web3.js": "^1.98.0",
+    "@web3auth/base": "^9.5.1",
+    "@web3auth/ethereum-provider": "^9.5.1",
+    "@web3auth/modal": "^9.5.1",
+    "@web3auth/solana-provider": "^9.5.1",
+    "buffer": "^6.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-inject": "^5.0.5",
+    "@types/chrome": "^0.0.268",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vite-plugin-node-polyfills": "^0.26.0",
+    "vite-plugin-static-copy": "^3.4.0"
+  }
+}

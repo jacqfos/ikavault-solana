@@ -1,0 +1,52 @@
+[package]
+name = "ikavault-client"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ikavault-client"
+path = "src/main.rs"
+
+[dependencies]
+# Solana
+solana-sdk = "2"
+solana-client = "2"
+anchor-client = "0.31"
+anchor-lang = "0.31"
+
+# Ika pre-alpha gRPC
+ika-grpc = { git = "https://github.com/dwallet-labs/ika-pre-alpha" }
+ika-dwallet-types = { git = "https://github.com/dwallet-labs/ika-pre-alpha" }
+tonic = { version = "0.14", features = ["tls-native-roots"] }
+bcs = "0.1"
+hex = "0.4"
+
+# Async runtime
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "full"] }
+
+# HTTP client (Walrus REST API)
+reqwest = { version = "0.12", features = ["json", "multipart"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Encrypt FHE client — URL hash encryption and private search
+encrypt-solana-client = { git = "https://github.com/dwallet-labs/encrypt-pre-alpha" }
+
+# Crypto (client-side AES-256-GCM for mock encryption)
+aes-gcm = "0.10"
+rand = "0.8"
+base64 = "0.22"
+sha2 = "0.10"
+
+# Error handling
+anyhow = "1"
+thiserror = "2"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Config
+dotenv = "0.15"

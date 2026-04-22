@@ -1,0 +1,42 @@
+# Rust
+target/
+**/*.rs.bk
+
+# Anchor
+.anchor/
+app/
+
+# Node
+node_modules/
+extension/dist/
+extension/node_modules/
+website/node_modules/
+website/.next/
+website/out/
+ikavault-dist/
+
+# Solana
+.keys/
+test-ledger/
+
+# Env
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db

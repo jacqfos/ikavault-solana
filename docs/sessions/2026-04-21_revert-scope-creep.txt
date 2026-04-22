@@ -1,0 +1,131 @@
+================================================================================
+IKAVAULT SOLANA — SCOPE REVERT LOG
+Session date : 2026-04-21
+Topic        : Back out on-chain Pro Pass, return to plain treasury transfer
+================================================================================
+
+
+─── WHY ────────────────────────────────────────────────────────────────────────
+
+User asked for a static marketing + pricing site on Walrus Sites with SuiNS.
+During the earlier autonomous block I added a `register_pro_pass` Anchor
+instruction and rewired the Solana payment to call it. This turned the
+"static site" into one that required deploying a modified Anchor program and
+swapping the treasury pubkey before the "Pay" button would actually work.
+
+User feedback:
+  "de én csak egy statikus weboldalt akartam, ez most mi"
+
+Agreed to revert. Keep all the UI work (that's all static, no regressions).
+Drop the on-chain ix. Solana payment becomes a plain SystemProgram.transfer
+to a treasury address, matching the SUI/IKA flow. Pro unlock for the
+extension can be client-side / tx-hash-based, not a PDA read.
+
+
+─── FILES DELETED ──────────────────────────────────────────────────────────────
+
+  programs/ikavault/src/instructions/register_pro_pass.rs
+      — Anchor ix: CPI SOL transfer → treasury + init ProPass PDA
+      — replaced with nothing; returning to transfer-only flow
+
+  website/lib/payment/ikavault-program.ts
+      — manual ix builder (Anchor discriminator + plan byte)
+      — obsolete once register_pro_pass is gone
+
+
+─── FILES MODIFIED — REVERT DIFFS ──────────────────────────────────────────────
+
+  programs/ikavault/src/instructions/mod.rs
+      - pub mod register_pro_pass;
+      - pub use register_pro_pass::*;
+
+  programs/ikavault/src/lib.rs
+      - pub fn register_pro_pass(ctx: Context<RegisterProPass>, plan: u8) -> Result<()>
+
+  programs/ikavault/src/state.rs
+      - ProPass struct (owner, plan, purchased_at, expires_at, amount_paid, bump)
+      - ProPass::SPACE, PLAN_PRO/PLAN_TEAM, PRICE_PRO_LAMPORTS/PRICE_TEAM_LAMPORTS
+
+  programs/ikavault/src/errors.rs
+      - UnknownPlan
+      - WrongPaymentAmount
+      - WrongTreasury
+
+  website/lib/payment/solana.ts
+      - import { buildRegisterProPassIx } from "./ikavault-program";
+      - export async function buildProPassTx({ plan, ... })
+      + (only buildSolanaPaymentTx + waitForSolanaPayment remain)
+
+  website/components/payment/PaymentModal.tsx
+      - import { buildProPassTx } from "@/lib/payment/solana";
+      + import { buildSolanaPaymentTx, waitForSolanaPayment } ...
+      + import { Keypair } from "@solana/web3.js"
+      + import { useMemo, useState } from "react"
+      payWithSolana():
+        - buildProPassTx({ connection, payer, plan })
+        + buildSolanaPaymentTx({ connection, payer, amountSol, reference })
+        + waitForSolanaPayment({ connection, reference })
+
+  website/app/docs/page.tsx
+      — "Pro Pass" section rewritten: no longer "on-chain pass minted at
+         checkout"; describes treasury-transfer + tx-proof gating instead.
+
+  website/app/pricing/page.tsx
+      — FAQ entries rewritten to drop the "lifetime NFT minted to wallet"
+         phrasing, keep the "one-time payment, lifetime access" story.
+
+  website/README.md
+      — TODO section: dropped Sui Move package + treasury-pubkey-swap items.
+      — "Payment flow (no backend)" → "Payment flow (no backend, no custom
+         program)". Step 5/6 rewritten: pro-unlock is client-side / tx-hash
+         based, not NFT/PDA.
+
+
+─── FILES UNCHANGED (kept from the earlier autonomous session) ────────────────
+
+  All landing sections: Hero, SplitKeyOrb, HowItWorks, Features, Architecture,
+  Security, Roadmap, Dogfood, Footer, Nav.
+  All routes: /, /pricing, /docs, /changelog, /not-found.
+  All config: next.config.mjs, tailwind.config.ts, tsconfig.json, package.json,
+  postcss.config.mjs, ws-resources.json, .env.example, .gitignore, public/*.
+
+
+─── VERIFICATION ───────────────────────────────────────────────────────────────
+
+  cd programs && cargo check -p ikavault
+  → Finished dev profile · 18 warnings (pre-existing anchor-lang noise) · 0 errors
+
+  cd website && npm run build
+  → Compiled successfully
+  → 7 static pages generated
+  → out/: /, /pricing, /docs, /changelog, /404
+  → no references to register_pro_pass, buildProPassTx, or ikavault-program
+    remain in app/, components/, or lib/
+
+
+─── WHAT'S LEFT BEFORE SHIP ────────────────────────────────────────────────────
+
+  1. Set real treasury addresses in website/.env (both SOL and SUI).
+  2. Set NEXT_PUBLIC_IKA_COIN_TYPE once Ika's token is on a stable network.
+  3. Convert public/og.svg → public/og.png (some social platforms reject SVG).
+  4. Real GitHub + Twitter links in Nav/Footer.
+  5. Walrus deploy:  site-builder publish ./out --epochs 30
+  6. SuiNS attach:   suins set-target-address ikavault 0x<site-object-id>
+
+  None of the above require any Anchor program change or on-chain deployment.
+  The site is pure static HTML + JS that signs plain transfer transactions
+  with the user's connected wallet.
+
+
+─── STATE AT EOF ───────────────────────────────────────────────────────────────
+
+  Anchor program: unchanged from pre-scope-creep — same 5 ixes (init_vault,
+  add_entry, update_entry, delete_entry, share_entry). Same Program ID.
+  Same state layout. Untouched.
+
+  Website: the full UI scaffold from the overnight block, minus the
+  on-chain payment wiring. SOL / SUI / IKA all go through plain transfer +
+  wallet signature. No custom program required to run or deploy.
+
+================================================================================
+EOF

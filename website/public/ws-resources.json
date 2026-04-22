@@ -1,0 +1,30 @@
+{
+  "headers": {
+    "/*": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    },
+    "/index.html": {
+      "Cache-Control": "public, max-age=60"
+    },
+    "/pricing/index.html": {
+      "Cache-Control": "public, max-age=60"
+    },
+    "/docs/index.html": {
+      "Cache-Control": "public, max-age=60"
+    },
+    "/changelog/index.html": {
+      "Cache-Control": "public, max-age=60"
+    }
+  },
+  "routes": {
+    "/*": "/404.html"
+  },
+  "metadata": {
+    "link": "https://ikavault.walrus.site",
+    "image_url": "https://ikavault.walrus.site/og.png",
+    "description": "Decentralized browser password manager on Solana. Ika 2PC-MPC split-key custody, Walrus blob storage, USDC/USDT stablecoin checkout.",
+    "project_url": "https://github.com",
+    "creator": "IkaVault"
+  },
+  "site_name": "IkaVault"
+}
