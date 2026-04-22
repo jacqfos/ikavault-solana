@@ -37,6 +37,9 @@ npm-debug.log*
 # Claude Code local settings
 .claude/settings.local.json
 
+# Internal dev logs (not public)
+docs/
+
 # OS
 .DS_Store
 Thumbs.db

@@ -5,7 +5,7 @@
 **Program ID:** `4y4f3BWjnCwAMw7eumBhLveJ6Uvv5i2qdgLCH3Nem6kf`
 **Audit típusa:** Hackathon-szintű belső audit, hivatalos jegyzőkönyvi formátumban
 **Audit dátuma:** 2026-04-18
-**Auditált állapot:** a `/home/itaipo/Claude/Colosseum/ikavault-solana/` munkakönyvtár az audit dátumán
+**Auditált állapot:** a projekt gyökér munkakönyvtár az audit dátumán
 **Terjedelem:** on-chain Anchor program + böngésző-bővítmény (background service worker, popup, content script, kriptográfiai réteg)
 **Terjedelmen kívül:** Web3Auth belső implementáció, Walrus konszenzus, Ika MPC protokoll helyessége, Encrypt FHE titkosszöveg szemantikája — ezek megbízható harmadik féltől származó primitívekként kezelve
 

@@ -5,7 +5,7 @@
 **Program ID:** `4y4f3BWjnCwAMw7eumBhLveJ6Uvv5i2qdgLCH3Nem6kf`
 **Audit type:** Hackathon-grade self-audit, official report format
 **Audit date:** 2026-04-18
-**Commit state audited:** working tree at `/home/itaipo/Claude/Colosseum/ikavault-solana/` as of the audit date
+**Commit state audited:** working tree at the project root as of the audit date
 **Scope:** On-chain Anchor program + browser extension (background service worker, popup, content script, crypto layer)
 **Out of scope:** Web3Auth internal implementation, Walrus consensus, Ika MPC protocol correctness, Encrypt FHE ciphertext semantics — these are treated as trusted third-party primitives
 
