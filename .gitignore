@@ -4,7 +4,7 @@ target/
 
 # Anchor
 .anchor/
-app/
+/app/
 
 # Node
 node_modules/

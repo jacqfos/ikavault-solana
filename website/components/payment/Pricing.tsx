@@ -90,7 +90,9 @@ export function Pricing() {
               <div className="mt-8">
                 {plan.id === "free" ? (
                   <a
-                    href="#"
+                    href="https://github.com/jacqfos/ikavault-solana#install"
+                    target="_blank"
+                    rel="noreferrer"
                     className="block rounded-full border border-white/10 px-5 py-3 text-center font-medium text-white/80 transition hover:bg-white/5"
                   >
                     Install extension
